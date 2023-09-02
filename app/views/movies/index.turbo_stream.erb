@@ -1,0 +1,4 @@
+<%= turbo_stream.append 'movies' do %>
+  <%= render partial: 'movies/movie', collection: @movies %>
+<% end %>
+
