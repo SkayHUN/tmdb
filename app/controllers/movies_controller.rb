@@ -1,12 +1,17 @@
 require 'movies_client'
 
 class MoviesController < ApplicationController
+  # before_action :validate_tmdb_api_key
+
   def index
     @query = params['default-search']
     @page = params['page'] || 1
     cache_key = "#{@query}_#{@page}" 
 
-    if @query
+    movies_client = MoviesClient.new(@query, @page.to_i)
+    @validate_api_key = movies_client.validate_api_key
+
+    if @query && @validate_api_key['success']
       if Rails.cache.fetch(cache_key).present?
         @fetched_from = 'our server'
         session[:cache_hit_counter] = session[:cache_hit_counter].to_i + 1 if session[:cache_hit_counter]
@@ -16,7 +21,7 @@ class MoviesController < ApplicationController
       end
 
       fetched_data = Rails.cache.fetch(cache_key, expires_in: 2.minutes) do
-        MoviesClient.search(@query, @page.to_i)
+        movies_client.search
       end
 
       @movies = fetched_data.results

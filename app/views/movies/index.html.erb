@@ -17,9 +17,15 @@
 	</div>
 <% end %>
 
-<div id="movies" class="grid grid-cols-[repeat(auto-fill,minmax(322px,1fr))] gap-x-3 gap-y-4 mx-8">
-    <%= render partial: 'movies/movie', collection: @movies %>
-</div>
+<% if @validate_api_key['success'] %>
+	<div id="movies" class="grid grid-cols-[repeat(auto-fill,minmax(322px,1fr))] gap-x-3 gap-y-4 mx-8">
+	    <%= render partial: 'movies/movie', collection: @movies %>
+	</div>
+<% else %>
+	<div id="errors" class="grid grid-cols-[repeat(auto-fill,minmax(322px,1fr))] gap-x-3 gap-y-4 mx-8">
+	    <%= render partial: 'errors' %>
+	</div>
+<% end %>
 
 <% if @total_pages.to_i > 0 %>
 	<div>
