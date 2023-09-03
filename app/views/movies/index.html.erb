@@ -11,14 +11,18 @@
     </div>
 </form>
 
-<div id="message">
-    <%= render partial: 'notice' %>
-</div>
+<% if @fetched_from %>
+	<div id="message">
+	    <%= render partial: 'notice' %>
+	</div>
+<% end %>
 
 <div id="movies" class="grid grid-cols-[repeat(auto-fill,minmax(322px,1fr))] gap-x-3 gap-y-4 mx-8">
     <%= render partial: 'movies/movie', collection: @movies %>
 </div>
 
-<div>
-    <%= render partial: 'pagination'%>
-</div>
+<% if @total_pages.to_i > 0 %>
+	<div>
+	    <%= render partial: 'pagination'%>
+	</div>
+<% end %>
