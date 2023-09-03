@@ -7,6 +7,6 @@ require 'net/http'
 class MoviesClient
 	def self.search(query, page = 1)
 		Tmdb::Api.key(ENV['TMDB_API_KEY'])
-		Tmdb::Search.movie(query, page: 1)
+		Tmdb::Search.movie(query, page: page)
 	end
 end

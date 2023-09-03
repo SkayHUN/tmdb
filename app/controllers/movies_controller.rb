@@ -2,10 +2,11 @@ require 'movies_client'
 
 class MoviesController < ApplicationController
   def index
-    query = params['default-search']
-    page = params['page']
+    @query = params['default-search']
+    @page = params['page'] || 1
+    cache_key = "#{@query}_#{@page}" 
 
-    if Rails.cache.fetch(query).present?
+    if Rails.cache.fetch(cache_key).present?
       @fetched_from = 'our server'
       session[:cache_hit_counter] = session[:cache_hit_counter].to_i + 1 if session[:cache_hit_counter]
     else
@@ -13,13 +14,16 @@ class MoviesController < ApplicationController
       session[:cache_hit_counter] = 0
     end
 
-    fetched_data = Rails.cache.fetch(query, expires_in: 2.minutes) do
-      MoviesClient.search(query, page.to_i)
+    fetched_data = Rails.cache.fetch(cache_key, expires_in: 2.minutes) do
+      MoviesClient.search(@query, @page.to_i)
     end
 
     @movies = fetched_data.results
+
+    # for pagination
     @total_pages = fetched_data.total_pages
     @current_page = fetched_data.page
+    @total_results = fetched_data.total_results
 
     respond_to do |format|
       format.html
