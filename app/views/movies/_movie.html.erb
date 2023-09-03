@@ -1,6 +1,10 @@
 <div class='w-full max-w-xs bg-white rounded-3xl shadow-xl overflow-hidden mt-6 mb-6'>
   <div class='max-w-xs'>
-    <img class='rounded-3xl mx-auto' src='<%= "https://image.tmdb.org/t/p/w300/#{movie.poster_path}"%>' />
+    <% if movie.poster_path.present? %>
+      <img class='rounded-3xl mx-auto' src='<%= "https://image.tmdb.org/t/p/w300/#{movie.poster_path}"%>' />
+    <% else %>
+      <%= image_tag "image_placeholder.png" %>
+    <% end %>
     <div class='p-4 sm:p-6'>
       <p class='font-bold text-gray-700 text-[22px] leading-7 mb-1'><%= movie.title %></p>
       <p class='text-[#7C7C80] font-[15px] mt-6'>Rating: <%= movie.vote_average %></p>
